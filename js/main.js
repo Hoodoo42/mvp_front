@@ -3,11 +3,17 @@
 
 // width/height will be canvas element size
 // scene: can be a single object (one scene), or an array - which allows multiple scenes that can run one or more at a time.
+
+
 var config = {
     type: Phaser.AUTO,
     width: 500,
     height:340,
+    dom: {
+        createContainer: true
+    },
     scene: [ 
+      HomeScene,
       BootScene,
       TitleScene,
       GameScene,
@@ -24,4 +30,7 @@ var config = {
     },
   };
 
+
+  var input;
   var game = new Phaser.Game(config);
+ 

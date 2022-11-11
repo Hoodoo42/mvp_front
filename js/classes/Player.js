@@ -7,10 +7,11 @@ class Player extends Phaser.Physics.Arcade.Image {
     this.scene.physics.world.enable(this);
     this.setImmovable(false);
     this.scene.add.existing(this);
+   
   }
   update(arrow) {
 
-    
+
     if (arrow.left.isDown) {
       this.body.velocity.x = -100;
     } else if (arrow.right.isDown) {
@@ -22,9 +23,13 @@ class Player extends Phaser.Physics.Arcade.Image {
     if (arrow.up.isDown && this.body.onFloor()) {
       this.body.velocity.y = -100;
     }
+    
+   
+    
+  }
+ 
+  
   }
 
-  playerDie() {
-    this.scene.start("Boot");
-  }
-}
+
+
