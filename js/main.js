@@ -9,14 +9,17 @@ var config = {
     type: Phaser.AUTO,
     width: 500,
     height:340,
+    backgroundColor: "#4488aa",
     dom: {
         createContainer: true
     },
     scene: [ 
-      HomeScene,
       BootScene,
-      TitleScene,
       GameScene,
+      HomeScene,
+      LoginScene,
+      SignupScene,
+      TitleScene,
       UiScene,
     ],
     physics: {

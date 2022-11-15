@@ -4,53 +4,102 @@ class GameScene extends Phaser.Scene {
   constructor() {
     super("Game");
   }
-
-  create() {
-    // this. allows player1 to be accessed in any method, and physics. enable the physics engine to be used on this sprite
-
-    this.player1 = new Player(this, 40, 290, "player1");
-    this.player1.body.gravity.y = 100;
-    this.arrow = this.input.keyboard.createCursorKeys();
-
-    this.createWorld();
-    // ADDING COLLISION BETWEEN PLAYER AND PLATFORM so player doesnt fall through ground.
-    this.physics.add.collider(this.player1, this.ground);
-
-    this.scoreLabel = this.add.text(30, 25, "souls: 0", {
-      font: "18px Arial",
-      fill: "#fff",
-    });
+  init() {
+    //first called when scene initializes
+    this.scene.launch("Ui"); //as the secondary scene being launched, it will render above GameScene. This runs Ui parellel with GameScene
     this.score = 0;
+  }
+  create() {
+    this.createPlayer();
+    this.createAudio();
+    this.spawnSouls();
+    this.createWorld();
+    this.createUnstableWorld();
+    this.createCollisions();
+    this.createInputs();
 
-    // this.spawnSouls();
+    this.cameras.main.setBounds(0, 0, 800, 340);
+    this.cameras.main.startFollow(this.player1);
+  }
+  update() {
+    this.player1.update(this.arrow); //sends the arrow variable over the the Player class update. And calls the update for the player class
 
-    this.soul = this.physics.add.sprite(300, 230, "soul");
+
   }
 
-  update() {
-    this.player1.update(this.arrow);
 
-    // COLLECTING POINTS (SOULS)
-    if (this.physics.overlap(this.player1, this.soul)) this.collectSoul();
 
-    // adding a conditional for when the player is out of bounds, game restarts
+  createPlayer() {
+    this.player1 = new Player(this, 40, 282, "player1"); //this.player1 = this.physics.add.image(40, 290, "player1") -> new Player(this) has tied this sprite with the Player class
+  }
+  createAudio() {
+    this.soulSound = this.sound.add("soul_noise");
+  }
+  spawnSouls() {
+    this.collectionOfSouls = this.physics.add.group()
+    
+
+    this.collectionOfSouls.add( new Points (this, 400, 240, "soul"));
+    this.collectionOfSouls.add( new Points (this, 580, 244, "soul"));
+    this.collectionOfSouls.add( new Points (this, 780, 244, "soul"));
+    
+
+    this.spawnSoul();
+  }
+  spawnSoul(){
+    const soul = new Points(this, 200, 250, "soul");
+    this.collectionOfSouls.add(soul);
+
   }
   createWorld() {
     this.ground = this.physics.add.staticGroup();
 
-    this.ground.create(300, 324, "ground2");
     this.ground.create(180, 324, "ground2");
-    this.ground.create(92, 324, "ground1");
+    this.ground.create(300, 324, "ground2");
+    this.ground.create(380, 324, "ground2");
+    this.ground.create(480, 324, "ground2");
+
+    this.ground.create(600, 324, "ground2");
+    this.ground.create(680, 324, "ground2");
+    this.ground.create(780, 324, "ground2");
+    this.ground.create(40, 324,  "ground2");
   }
-  collectSoul() {
-    this.soul.destroy();
-    this.score += 1;
-    this.scoreLabel.setText("souls: " + this.score);
+  createUnstableWorld(){
+    this.fallenGround = this.physics.add.staticGroup();
+    
+    this.fallenGround.create(95, 324, "ground1")
+  }
+  createCollisions() {
+    this.physics.add.collider(this.player1, this.ground);
+    this.physics.add.collider(this.player1, this.fallenGround);
+    this.physics.add.overlap(this.player1, this.collectionOfSouls, this.collectSoul, null, this);
+  }
+  createInputs(){
+    this.arrow = this.input.keyboard.createCursorKeys();
+
   }
 
-  playerDie(){
-    if(this.player1.y > 360 || this.y < 0){
-        this.scene.start("Boot");
-    }
+  collectSoul(player1, soul) {
+    this.soulSound.play(); //play soul sound when collects
+    soul.destroy(); //destroy sprite image when collected
+    this.events.emit("updateScore", soul.souls); //update the score in UI
+    // console.assert(Points.souls !== undefined);
+  
+    let gamer_id = Cookies.get("gamer_id");
+    let points = soul.souls;
+    axios
+      .request({
+        url: "http://127.0.0.1:5000/api/points",
+        method: "PATCH",
+        headers: {
+          gamer_id: gamer_id,
+        },
+
+        data: {
+          points: points,
+        },
+      })
+      .then((res) => res)
+      .catch((err) => err);
   }
 }
