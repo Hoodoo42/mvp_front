@@ -14,6 +14,9 @@ class BootScene extends Phaser.Scene {
     // world sprites (grounds etc)
     this.load.image("ground1", "assets/ground2.png");
     this.load.image("ground2", "assets/ground2.png");
+    //Finished level portal
+    this.load.image("portal", "assets/portal.png");
+
     // UI button images
     this.load.image("up_button", "assets/up_button.png");
     this.load.image("down_button", "assets/down_button.png");
@@ -26,9 +29,9 @@ class BootScene extends Phaser.Scene {
   // with one scene, we would have preload, create, update all in one. but with multiscenes, only the first scene in the array(in main.js) will be active
   // to activate the next scenes we make another create methed and call the GameScene
   create() {
-    this.scene.start("Game");
+    // this.scene.start("Game");
     // this.scene.start('Title');
-    // this.scene.start('Home');
+    this.scene.start('Home');
     // this.scene.start("Ui");
     // this.scene.start('Login');
   }
