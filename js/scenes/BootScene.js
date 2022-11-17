@@ -15,7 +15,7 @@ class BootScene extends Phaser.Scene {
     this.load.image("ground1", "assets/ground2.png");
     this.load.image("ground2", "assets/ground2.png");
     //Finished level portal
-    this.load.image("portal", "assets/portal.png");
+    // this.load.image("portal", "assets/portal.png");
 
     // UI button images
     this.load.image("up_button", "assets/up_button.png");
