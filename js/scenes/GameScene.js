@@ -91,7 +91,7 @@ class GameScene extends Phaser.Scene {
     let points = soul.souls;
     axios
       .request({
-        url: "http://127.0.0.1:5000/api/points",
+        url: "/api/points",
         method: "PATCH",
         headers: {
           gamer_id: gamer_id,

@@ -40,7 +40,7 @@ class LoginScene extends Phaser.Scene {
     document.getElementById("submit_login").addEventListener("click", () => {
       axios
         .request({
-          url: "http://127.0.0.1:5000/api/gamer_login",
+          url: "/api/gamer_login",
           method: "POST",
           data: {
             username: document.getElementById("username").value,
