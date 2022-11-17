@@ -41,7 +41,7 @@ class SignupScene extends Phaser.Scene {
       .addEventListener("click", function (event) {
         axios
           .request({
-            url: "http://127.0.0.1:5000/api/gamer",
+            url: "/api/gamer",
             method: "POST",
             data: {
               username: document.getElementById("username").value,
